@@ -37,3 +37,24 @@ resource "aws_route53_record" "mtbwtf_mx" {
   ttl = "300"
   records = ["10 mx01.mail.icloud.com.", "20 mx02.mail.icloud.com."]
 }
+
+locals {
+  domain_name = "mtb.wtf"
+  use_failback = false
+  failback_list = [
+    "aws-dns-1",
+    "aws-dns-2",
+    "aws-dns-3",
+    "aws-dns-4",
+  ]
+}
+
+resource "null_resource" "aws_domain_com_nameservers" {
+  triggers = {
+    nameservers = join(", ",sort(  local.use_failback == false ? aws_route53_zone.mtbwtf.name_servers : [ for ns in local.failback_list:  ns ]  ))
+  }
+
+  provisioner "local-exec" {
+    command = "aws route53domains update-domain-nameservers  --domain-name ${local.domain_name} --nameservers  ${join(" ",formatlist(" Name=%s",sort(  local.use_failback == false ? aws_route53_zone.mtbwtf.name_servers : [ for ns in local.failback_list:  ns ]  )))}   "
+  }
+}
