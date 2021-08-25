@@ -8,7 +8,7 @@ resource "aws_route53_zone" "mtbwtf" {
 
 resource "aws_route53_record" "test" {
   zone_id = aws_route53_zone.mtbwtf.zone_id
-  name    = "@"
+  name    = "mtb.wtf."
   type    = "A"
   ttl     = "300"
   records = ["0.0.0.0"]
@@ -16,7 +16,7 @@ resource "aws_route53_record" "test" {
 
 resource "aws_route53_record" "mtbwtf_spf" {
   zone_id = aws_route53_zone.mtbwtf.zone_id
-  name    = "@"
+  name    = "mtb.wtf."
   type    = "TXT"
   ttl     = "300"
   records = ["v=spf1 redirect=icloud.com", "apple-domain=Rvhs2XH3aDeAY18g"]
@@ -32,7 +32,7 @@ resource "aws_route53_record" "mtbwtf_dkim" {
 
 resource "aws_route53_record" "mtbwtf_mx" {
   zone_id = aws_route53_zone.mtbwtf.zone_id
-  name    = "@"
+  name    = "mtb.wtf."
   type    = "MX"
   ttl     = "300"
   records = ["10 mx01.mail.icloud.com.", "20 mx02.mail.icloud.com."]
