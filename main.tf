@@ -55,6 +55,6 @@ resource "null_resource" "aws_domain_com_nameservers" {
   }
 
   provisioner "local-exec" {
-    command = "aws route53domains update-domain-nameservers  --domain-name ${local.domain_name} --nameservers  ${join(" ",formatlist(" Name=%s",sort(  local.use_failback == false ? aws_route53_zone.mtbwtf.name_servers : [ for ns in local.failback_list:  ns ]  )))}   "
+    command = "aws --region us-west-2 route53domains update-domain-nameservers  --domain-name ${local.domain_name} --nameservers  ${join(" ",formatlist(" Name=%s",sort(  local.use_failback == false ? aws_route53_zone.mtbwtf.name_servers : [ for ns in local.failback_list:  ns ]  )))}   "
   }
 }
