@@ -22,12 +22,8 @@ data "aws_iam_policy" "IAMFullAccess" {
   name = "IAMFullAccess"
 }
 
-data "aws_iam_policy" "AmazonRoute53DomainsReadOnlyAccess" {
-  name = "AmazonRoute53DomainsReadOnlyAccess"
-}
-
-data "aws_iam_policy" "AmazonRoute53AutoNamingFullAccess" {
-  name = "AmazonRoute53AutoNamingFullAccess"
+data "aws_iam_policy" "AmazonRoute53FullAccess" {
+  name = "AmazonRoute53FullAccess"
 }
 
 resource "aws_iam_group_policy_attachment" "IAMFullAccess_attach" {
@@ -35,13 +31,8 @@ resource "aws_iam_group_policy_attachment" "IAMFullAccess_attach" {
   policy_arn = data.aws_iam_policy.IAMFullAccess.arn
 }
 
-resource "aws_iam_group_policy_attachment" "AmazonRoute53AutoNamingFullAccess_attach" {
+resource "aws_iam_group_policy_attachment" "AmazonRoute53FullAccess_attach" {
   group = aws_iam_group.admin.name
-  policy_arn = data.aws_iam_policy.AmazonRoute53AutoNamingFullAccess.arn
-}
-
-resource "aws_iam_group_policy_attachment" "AmazonRoute53DomainsReadOnlyAccess_attach" {
-  group = aws_iam_group.admin.name
-  policy_arn = data.aws_iam_policy.AmazonRoute53DomainsReadOnlyAccess.arn
+  policy_arn = data.aws_iam_policy.AmazonRoute53FullAccess.arn
 }
   
