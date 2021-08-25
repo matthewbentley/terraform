@@ -27,12 +27,12 @@ data "aws_iam_policy" "AmazonRoute53FullAccess" {
 }
 
 resource "aws_iam_group_policy_attachment" "IAMFullAccess_attach" {
-  group = aws_iam_group.admin.name
+  group      = aws_iam_group.admin.name
   policy_arn = data.aws_iam_policy.IAMFullAccess.arn
 }
 
 resource "aws_iam_group_policy_attachment" "AmazonRoute53FullAccess_attach" {
-  group = aws_iam_group.admin.name
+  group      = aws_iam_group.admin.name
   policy_arn = data.aws_iam_policy.AmazonRoute53FullAccess.arn
 }
-  
+
