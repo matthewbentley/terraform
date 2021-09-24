@@ -98,7 +98,7 @@ resource "aws_route53_record" "mtbwtf_mc_aaaa" {
 resource "digitalocean_firewall" "mc" {
   # TODO: add mc ports
 
-  name        = "MC firewall"
+  name        = "mc_firewall"
   droplet_ids = [digitalocean_droplet.mc.id]
 
   inbound_rule {
