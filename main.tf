@@ -62,3 +62,70 @@ resource "null_resource" "aws_domain_com_nameservers" {
 output "mtbwtf_NS" {
   value = aws_route53_zone.mtbwtf.name_servers
 }
+
+resource "digitalocean_droplet" "mc" {
+  image         = "ubuntu-20-04-x64"
+  name          = "mc.mtb.wtf"
+  region        = "nyc3"
+  size          = "s-4vcpu-8gb-intel"
+  monitoring    = "true"
+  ipv6          = "true"
+  droplet_agent = "true"
+  ssh_keys      = [digitalocean_ssh_key.m1_macos.fingerprint]
+}
+
+resource "digitalocean_ssh_key" "m1_macos" {
+  name       = "bentley m1 macos"
+  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEj3xP1wGv5tdCwH0tkuy/EPJm7tIAWDZlJVCb1EGv4Z bentley@Matthews-MacBook-Pro.local"
+}
+
+resource "aws_route53_record" "mtbwtf_mc_a" {
+  zone_id = aws_route53_zone.mtbwtf.zone_id
+  name    = "mc.mtb.wtf."
+  type    = "A"
+  ttl     = "300"
+  records = [digitalocean_droplet.mc.ipv4_address]
+}
+
+resource "aws_route53_record" "mtbwtf_mc_aaaa" {
+  zone_id = aws_route53_zone.mtbwtf.zone_id
+  name    = "mc.mtb.wtf."
+  type    = "AAAA"
+  ttl     = "300"
+  records = [digitalocean_droplet.mc.ipv6_address]
+}
+
+resource "digitalocean_firewall" "mc" {
+  # TODO: add mc ports
+
+  name        = "MC firewall"
+  droplet_ids = [digitalocean_droplet.mc.id]
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "22"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+    protocol         = "icmp"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "tcp"
+    port_range            = "53"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "udp"
+    port_range            = "53"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "icmp"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+}
