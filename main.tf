@@ -108,6 +108,18 @@ resource "digitalocean_firewall" "mc" {
   }
 
   inbound_rule {
+    protocol = "udp"
+    port_range = "25565"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+    protocol = "tcp"
+    port_range = "25565"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
     protocol         = "icmp"
     source_addresses = ["0.0.0.0/0", "::/0"]
   }
